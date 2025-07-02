@@ -1,11 +1,28 @@
 import streamlit as st
 import firebase_admin
 from firebase_admin import credentials, firestore
+import toml
+import os
 
 # Firebase 연결
-if not firebase_admin._apps:
-    cred = credentials.Certificate("skyelectricFbKey.json")
-    firebase_admin.initialize_app(cred)
+# Firebase 초기화 및 연결 상태 확인
+connection_status = ""
+try:
+    # toml 파일에서 서비스 계정 키 로드
+    config = toml.load("firebase_config.toml")
+    key_path = config["firebase"]["service_account_key"]
+
+    if not os.path.exists(key_path):
+        raise FileNotFoundError(f"Key file not found: {key_path}")
+
+    if not firebase_admin._apps:
+        cred = credentials.Certificate(key_path)
+        firebase_admin.initialize_app(cred)
+    db = firestore.client()
+    connection_status = "✅ Firebase 연결 성공"
+except Exception as e:
+    db = None
+    connection_status = f"❌ Firebase 연결 실패: {e}"
 
 db = firestore.client()
 
