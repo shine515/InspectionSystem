@@ -8,13 +8,17 @@ import os
 # Firebase 초기화 및 연결 상태 확인
 connection_status = ""
 try:
-    # toml 파일에서 서비스 계정 키 로드
-    config = st.secrets["firebase"]["private_key"]
     
+    # ✅ Firebase secrets 가져오기
+    firebase_config = dict(st.secrets["firebase"])
+    firebase_config["private_key"] = firebase_config["private_key"].replace("\\n", "\n")
+
+    # ✅ Firebase 초기화
     if not firebase_admin._apps:
-        cred = credentials.Certificate(config)
+        cred = credentials.Certificate(firebase_config)
         firebase_admin.initialize_app(cred)
-        
+
+    # ✅ Firestore 인스턴스 생성
     db = firestore.client()
     connection_status = "✅ Firebase 연결 성공"
 except Exception as e:
@@ -24,7 +28,7 @@ except Exception as e:
 
 st.set_page_config(page_title="직원별 수용가 링크", layout="wide")
 st.title("👨‍💼 직원별 담당 수용가")
-
+st.warning(connection_status)  # 화면 상단에 표시
 # 직원 목록 가져오기
 employee_docs = db.collection("employees").stream()
 employee_names = []
