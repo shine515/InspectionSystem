@@ -9,22 +9,18 @@ import os
 connection_status = ""
 try:
     # toml 파일에서 서비스 계정 키 로드
-    config = toml.load("firebase_config.toml")
-    key_path = config["firebase"]["service_account_key"]
-
-    if not os.path.exists(key_path):
-        raise FileNotFoundError(f"Key file not found: {key_path}")
-
+    config = st.secrets["firebase"]
+    
     if not firebase_admin._apps:
-        cred = credentials.Certificate(key_path)
+        cred = credentials.Certificate(config)
         firebase_admin.initialize_app(cred)
+        
     db = firestore.client()
     connection_status = "✅ Firebase 연결 성공"
 except Exception as e:
     db = None
     connection_status = f"❌ Firebase 연결 실패: {e}"
 
-db = firestore.client()
 
 st.set_page_config(page_title="직원별 수용가 링크", layout="wide")
 st.title("👨‍💼 직원별 담당 수용가")
@@ -55,10 +51,12 @@ else:
                 form_url = site.get("form_url", "")
 
                 st.markdown(f"📌 **{site_name}**")
-                if form_url:
-                    st.markdown(f"🔗 [Google Form 바로가기]({form_url})", unsafe_allow_html=True)
-                else:
-                    st.markdown("❌ 구글폼 링크 없음")
+                with st.expander(f"📌 {site_name}", expanded=True):
+                    if form_url:
+                        st.markdown(f"🔗 [Google Form 바로가기]({form_url})", unsafe_allow_html=True)
+                    else:
+                        st.markdown("❌ 구글폼 링크 없음")
+
                 st.markdown("---")
                 found = True
 
