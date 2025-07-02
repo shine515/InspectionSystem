@@ -9,7 +9,7 @@ import os
 connection_status = ""
 try:
     # toml 파일에서 서비스 계정 키 로드
-    config = st.secrets["firebase"]
+    config = st.secrets["firebase"]["private_key"]
     
     if not firebase_admin._apps:
         cred = credentials.Certificate(config)
