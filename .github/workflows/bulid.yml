@@ -31,7 +31,7 @@ jobs:
       - name: Firebase Key 복원
         shell: pwsh
         run: |
-          [System.IO.File]::WriteAllBytes("skyelectricFbKey.json", [Convert]::FromBase64String("${{ secrets.FB_KEY_BASE64 }}"))
+          [System.IO.File]::WriteAllBytes("keys/skyelectricFbKey.json", [Convert]::FromBase64String("${{ secrets.FB_KEY_BASE64 }}"))
 
       - name: spec삭제
         shell: pwsh
@@ -44,7 +44,7 @@ jobs:
 
       - name: Firebase Key 삭제
         shell: pwsh
-        run: Remove-Item -Force skyelectricFbKey.json
+        run: Remove-Item -Force keys/skyelectricFbKey.json
 
       - name: FbPgExe압축
         run: Compress-Archive -Path FbPgExe\* -DestinationPath FbPgExe.zip
