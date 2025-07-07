@@ -1,4 +1,5 @@
 import sys
+import os
 from PyQt5.QtWidgets import (
     QApplication, QWidget, QLabel, QLineEdit, QPushButton, QListWidget,
     QVBoxLayout, QHBoxLayout, QGridLayout, QMessageBox, QGroupBox, QDialog, QComboBox, QScrollArea
@@ -6,10 +7,21 @@ from PyQt5.QtWidgets import (
 import firebase_admin
 from firebase_admin import credentials, firestore
 
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS  # PyInstaller 실행 시 임시 폴더
+    except AttributeError:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+
+# Firebase 키 경로
+key_path = resource_path("keys/skyelectricFbKey.json")
+
 # Firebase 초기화 및 연결 상태 확인
 connection_status = ""
 if not firebase_admin._apps:
-    cred = credentials.Certificate("skyelectricFbKey.json")
+    cred = credentials.Certificate(key_path)
     firebase_admin.initialize_app(cred)
 db = firestore.client()
 
