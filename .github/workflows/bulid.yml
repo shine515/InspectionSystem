@@ -28,10 +28,14 @@ jobs:
           python -m pip install --upgrade pip
           pip install pyinstaller PyQt5 firebase-admin
 
+      - name: 키 복원 전 폴더 생성
+        shell: pwsh
+        run: New-Item -ItemType Directory -Force -Path keys
+
       - name: Firebase Key 복원
         shell: pwsh
         run: |
-          [System.IO.File]::WriteAllBytes("skyelectricFbKey.json", [Convert]::FromBase64String("${{ secrets.FB_KEY_BASE64 }}"))
+          [System.IO.File]::WriteAllBytes("keys/skyelectricFbKey.json", [Convert]::FromBase64String("${{ secrets.FB_KEY_BASE64 }}"))
 
       - name: spec삭제
         shell: pwsh
@@ -40,11 +44,11 @@ jobs:
       - name: EXE 빌드
         shell: pwsh
         run: |
-          pyinstaller --noconfirm --onefile --windowed --add-data "skyelectricFbKey.json;." --distpath FbPgExe --workpath FbPgExe/build FbManager.py
+          pyinstaller --noconfirm --onefile --windowed --add-data "skyelectricFbKey.json;keys" --distpath FbPgExe --workpath FbPgExe/build FbManager.py
 
       - name: Firebase Key 삭제
         shell: pwsh
-        run: Remove-Item -Force skyelectricFbKey.json
+        run: Remove-Item -Force keys/skyelectricFbKey.json
 
       - name: FbPgExe압축
         run: Compress-Archive -Path FbPgExe\* -DestinationPath FbPgExe.zip
