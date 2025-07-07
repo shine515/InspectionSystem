@@ -31,8 +31,11 @@ def get_latest_release_info():
 def read_local_version():
     try:
         with open(os.path.join(os.path.dirname(__file__), "version.txt"), "r", encoding="utf-8") as f:
-            return f.read().strip()
-    except:
+            lver = f.read().strip()[1:]
+            print("로컬버전 조회: ", lver)
+            return lver
+    except Exception as e:
+        print("로컬버전 조회실패", e)
         return "0.0.0"
 
 def is_update_needed(current_version):
@@ -313,16 +316,16 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     update_needed, zip_url, latest = is_update_needed(CURRENT_VERSION)
 
-if update_needed:
-    reply = QMessageBox.question(
-        None,
-        "업데이트 확인",
-        f"새 버전 {latest} 이(가) 있습니다.\n업데이트 하시겠습니까?",
-        QMessageBox.Yes | QMessageBox.No
-    )
-    if reply == QMessageBox.Yes:
-        subprocess.Popen(["Updater.exe", zip_url])
-        sys.exit()
+    if update_needed:
+        reply = QMessageBox.question(
+            None,
+            "업데이트 확인",
+            f"새 버전 {latest} 이(가) 있습니다.\n업데이트 하시겠습니까?",
+            QMessageBox.Yes | QMessageBox.No
+        )
+        if reply == QMessageBox.Yes:
+            subprocess.Popen(["Updater.exe", zip_url])
+            sys.exit()
     window = ManagerProgram()
     window.show()
     sys.exit(app.exec_())
