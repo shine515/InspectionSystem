@@ -16,7 +16,7 @@ def resource_path(relative_path):
     return os.path.join(base_path, relative_path)
 
 # Firebase 키 경로
-key_path = resource_path("skyelectricFbKey.json")
+key_path = resource_path("keys/skyelectricFbKey.json")
 
 # Firebase 초기화 및 연결 상태 확인
 connection_status = ""
