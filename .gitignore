@@ -8,6 +8,7 @@ dist/
 keys/
 *.db
 *.json
+version.txt
 
 # C extensions
 *.so
