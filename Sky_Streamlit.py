@@ -29,7 +29,7 @@ except Exception as e:
 
 
 st.set_page_config(page_title="직원별 수용가 링크", layout="wide")
-st.title("👨‍💼 직원별 담당 수용가")
+st.title("직원별 담당 수용가")
 #st.warning(connection_status)  # 화면 상단에 표시
 # 직원 목록 가져오기
 employee_docs = db.collection("employees").stream()
@@ -55,8 +55,10 @@ else:
                 site = doc.to_dict()
                 site_name = site.get("name", "이름없음")
                 form_url = site.get("form_url", "")
-                
-                st.markdown(f"<p style='font-size:24px;'>🔗<a href={form_url}>[{site_name}]</a></p>", unsafe_allow_html=True)
+                if not form_url:
+                    st.markdown(f"<p style='font-size:24px;'>🔗[{site_name}]</p>", unsafe_allow_html=True)
+                else:
+                    st.markdown(f"<p style='font-size:24px;'>🔗<a href={form_url}>[{site_name}]</a></p>", unsafe_allow_html=True)
                 #st.markdown("---")
                 found = True
 
