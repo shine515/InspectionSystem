@@ -4,6 +4,7 @@ from firebase_admin import credentials, firestore
 import toml
 import os
 
+
 # Firebase 연결
 # Firebase 초기화 및 연결 상태 확인
 connection_status = ""
@@ -20,15 +21,15 @@ try:
 
     # ✅ Firestore 인스턴스 생성
     db = firestore.client()
-    connection_status = "✅ Firebase 연결 성공"
+    connection_status = f"✅ 서버 연결 성공"
 except Exception as e:
     db = None
-    connection_status = f"❌ Firebase 연결 실패: {e}"
+    connection_status = f"❌ 서버 연결 실패: {e}"
 
 
 st.set_page_config(page_title="직원별 수용가 링크", layout="wide")
 st.title("👨‍💼 직원별 담당 수용가")
-st.warning(connection_status)  # 화면 상단에 표시
+#st.warning(connection_status)  # 화면 상단에 표시
 # 직원 목록 가져오기
 employee_docs = db.collection("employees").stream()
 employee_names = []
@@ -53,15 +54,9 @@ else:
                 site = doc.to_dict()
                 site_name = site.get("name", "이름없음")
                 form_url = site.get("form_url", "")
-
-                st.markdown(f"📌 **{site_name}**")
-                with st.expander(f"📌 {site_name}", expanded=True):
-                    if form_url:
-                        st.markdown(f"🔗 [Google Form 바로가기]({form_url})", unsafe_allow_html=True)
-                    else:
-                        st.markdown("❌ 구글폼 링크 없음")
-
-                st.markdown("---")
+                
+                st.markdown(f"<p style='font-size:24px;'>🔗<a href={form_url}>[{site_name}]</a></p>", unsafe_allow_html=True)
+                #st.markdown("---")
                 found = True
 
             if not found:

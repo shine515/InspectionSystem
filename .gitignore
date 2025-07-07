@@ -1,7 +1,13 @@
 # Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[codz]
-*$py.class
+#__pycache__/
+#*.py[codz]
+#*$py.class
+#*.pyc
+#*.spec
+#build/
+#dist/
+keys/
+#*.db
 
 # C extensions
 *.so
@@ -31,7 +37,6 @@ MANIFEST
 #  before PyInstaller builds the exe, so as to inject date/other infos into it.
 *.manifest
 *.spec
-skyelectricFbKey.json
 
 # Installer logs
 pip-log.txt

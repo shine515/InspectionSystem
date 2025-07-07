@@ -123,7 +123,7 @@ class ManagerProgram(QWidget):
         filter_layout.addWidget(self.type_filter)
 
         self.list_widget = QListWidget()
-        self.list_widget.itemClicked.connect(self.load_detail)
+        self.list_widget.currentItemChanged.connect(lambda current, prev: self.load_detail(current)) #커서에 맞춰 업데이트
 
         self.btn_add = QPushButton("+추가")
         self.btn_add.clicked.connect(self.open_add_window)
