@@ -12,8 +12,6 @@ from packaging import version
 
 import subprocess
 
-CURRENT_VERSION = "0.0.3"  # 현재 앱 버전
-
 def get_latest_release_info():
     url = "https://api.github.com/repos/shine515/InspectionSystem/releases/latest"
     try:
@@ -311,6 +309,7 @@ class ManagerProgram(QWidget):
         self.load_site_list()
 
 if __name__ == "__main__":
+    CURRENT_VERSION = read_local_version()
     app = QApplication(sys.argv)
     update_needed, zip_url, latest = is_update_needed(CURRENT_VERSION)
 
