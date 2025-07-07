@@ -23,9 +23,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install pyinstaller PyQt5 firebase-admin
 
-      - name: Firebase 키 복원
+      - name: Firebase 키 복원 #(PowerShell 사용)
+        shell: pwsh
         run: |
-          echo ${{ secrets.FB_KEY_BASE64 }} | base64 -d > skyelectricFbKey.json
+          [System.IO.File]::WriteAllBytes("skyelectricFbKey.json", [Convert]::FromBase64String("${{ secrets.FB_KEY_BASE64 }}"))
 
       - name: EXE 빌드 (FbPgExe 폴더)
         run: |
