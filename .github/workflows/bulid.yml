@@ -55,10 +55,8 @@ jobs:
         run: Compress-Archive -Path FbPgExe\* -DestinationPath FbPgExe.zip
 
       - name: 버전 쓰기
-        id: version
         run: |
-          echo "VERSION=${{steps.tagger.outputs.new_tag}}" >> $GITHUB_ENV
-          echo "${{env.VERSION}}" > version.txt
+          echo "${{steps.tagger.outputs.new_tag}}" >> version.txt
           
       - name: 자동태그
         uses: mathieudutour/github-tag-action@v6.1
