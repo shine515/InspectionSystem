@@ -39,7 +39,7 @@ jobs:
           Remove-Item -Force Updater.spec -ErrorAction SilentlyContinue
 
       - name: Updater 빌드
-        run: pyinstaller --noconfirm --onefile FbPgExe/Updater.py
+        run: pyinstaller --noconfirm --onefile --windowed --distpath FbPgExe --workpath FbPgExe/build Updater.py
 
       - name: FbManager EXE 빌드
         shell: pwsh
