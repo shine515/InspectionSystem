@@ -13,7 +13,6 @@ permissions:
 jobs:
   build:
     runs-on: windows-latest
-
     steps:
       - name: 소스코드 체크아웃
         uses: actions/checkout@v3
@@ -28,10 +27,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install pyinstaller PyQt5 firebase-admin
 
-      - name: 키 복원 전 폴더 생성
-        shell: pwsh
-        run: New-Item -ItemType Directory -Force -Path keys
-
       - name: Firebase Key 복원
         shell: pwsh
         run: |
@@ -44,7 +39,7 @@ jobs:
       - name: EXE 빌드
         shell: pwsh
         run: |
-          pyinstaller --noconfirm --onefile --windowed --add-data="skyelectricFbKey.json" --distpath FbPgExe --workpath FbPgExe/build FbManager.py
+          pyinstaller --noconfirm --onefile --windowed --add-data "skyelectricFbKey.json;." --distpath FbPgExe --workpath FbPgExe/build FbManager.py
 
       #- name: Firebase Key 삭제
       #  shell: pwsh
