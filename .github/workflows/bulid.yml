@@ -9,10 +9,11 @@ permissions:
   contents: write
   packages: write
   issues: write
-
+  
 jobs:
   build:
     runs-on: windows-latest
+
     steps:
       - name: 소스코드 체크아웃
         uses: actions/checkout@v3
@@ -41,10 +42,10 @@ jobs:
       - name: Updater 빌드
         run: pyinstaller --noconfirm --onefile --windowed --distpath FbPgExe Updater.py
 
-      - name: FbManager EXE 빌드
+      - name: EXE 빌드
         shell: pwsh
         run: |
-          pyinstaller --noconfirm --onefile --windowed --add-data skyelectricFbKey.json --distpath FbPgExe --workpath FbPgExe/build FbManager.py
+          pyinstaller --noconfirm --onefile --windowed --add-data "skyelectricFbKey.json;." --distpath FbPgExe --workpath FbPgExe/build FbManager.py
 
       #- name: Firebase Key 삭제
       #  shell: pwsh
@@ -53,7 +54,7 @@ jobs:
       - name: FbPgExe압축
         run: |
           copy version.txt FbPgExe\ 
-          powershell Compress-Archive -Path FbPgExe\* -DestinationPath FbPgExe.zip
+          Compress-Archive -Path FbPgExe\* -DestinationPath FbPgExe.zip
 
       - name: 자동태그
         uses: mathieudutour/github-tag-action@v6.1
