@@ -36,11 +36,11 @@ jobs:
         shell: pwsh
         run: |
           Remove-Item -Force FbManager.spec -ErrorAction SilentlyContinue
-          Remove-Item -Force updater.spec -ErrorAction SilentlyContinue
+          Remove-Item -Force Updater.spec -ErrorAction SilentlyContinue
 
-      - name: updater 빌드
-        run: pyinstaller --noconfirm --onefile FbPgExe/updater.py
-        
+      - name: Updater 빌드
+        run: pyinstaller --noconfirm --onefile FbPgExe/Updater.py
+
       - name: FbManager EXE 빌드
         shell: pwsh
         run: |
