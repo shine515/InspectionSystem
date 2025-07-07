@@ -3,7 +3,7 @@ name: Build EXE with PyInstaller
 on:
   push:
     branches:
-      - main 
+      - main
 
 jobs:
   build:
@@ -23,18 +23,25 @@ jobs:
           python -m pip install --upgrade pip
           pip install pyinstaller PyQt5 firebase-admin
 
-      - name: EXE 빌드
-        run: |
-          pyinstaller --noconfirm --onefile --windowed --add-data "skyelectricFbKey.json;." FbManager.py
-
-      - name: Release에 실행파일 업로드
-        uses: softprops/action-gh-release@v1
-        with:
-          files: dist/FbManager.exe
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Firebase 키 복원
         run: |
           echo ${{ secrets.FB_KEY_BASE64 }} | base64 -d > skyelectricFbKey.json
 
+      - name: EXE 빌드 (FbPgExe 폴더)
+        run: |
+          pyinstaller --noconfirm --onefile --windowed ^
+            --add-data "skyelectricFbKey.json;." ^
+            --distpath FbPgExe --workpath FbPgExe/build --specpath FbPgExe FbManager.py
+
+      - name: 키 파일 삭제
+        run: del skyelectricFbKey.json
+
+      - name: FbPgExe 폴더 압축
+        run: Compress-Archive -Path FbPgExe\* -DestinationPath FbPgExe.zip
+
+      - name: Release에 zip 파일 업로드
+        uses: softprops/action-gh-release@v1
+        with:
+          files: FbPgExe.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,13 +1,13 @@
 # Byte-compiled / optimized / DLL files
-#__pycache__/
-#*.py[codz]
-#*$py.class
-#*.pyc
-#*.spec
-#build/
-#dist/
+__pycache__/
+*.py[codz]
+*$py.class
+*.pyc
+*.spec
+build/
+dist/
 keys/
-#*.db
+*.db
 
 # C extensions
 *.so
