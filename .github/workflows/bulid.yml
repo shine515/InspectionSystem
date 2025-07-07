@@ -28,10 +28,13 @@ jobs:
         run: |
           [System.IO.File]::WriteAllBytes("skyelectricFbKey.json", [Convert]::FromBase64String("${{ secrets.FB_KEY_BASE64 }}"))
 
-      - name: EXE 빌드 (PowerShell, 한 줄 처리)
+      - name: 경로 확인
+        run: dir
+
+      - name: EXE 빌드
         shell: pwsh
         run: |
-          pyinstaller --noconfirm --onefile --windowed --add-data "skyelectricFbKey.json;." --distpath FbPgExe --workpath FbPgExe/build --specpath FbPgExe FbManager.py
+          pyinstaller --noconfirm --onefile --windowed --add-data "./skyelectricFbKey.json;." --distpath FbPgExe --workpath FbPgExe/build --specpath FbPgExe FbManager.py
 
       - name: 키 파일 삭제
         shell: pwsh
