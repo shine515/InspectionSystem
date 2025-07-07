@@ -39,10 +39,7 @@ jobs:
       - name: FbManagerEXE 빌드
         shell: pwsh
         run: |
-          pyinstaller --noconfirm --onefile --windowed^
-          --add-data "skyelectricFbKey.json;."^
-          --add-data "version.txt;." FbManager.py^
-          --distpath FbPgExe --workpath FbPgExe/build FbManager.py
+          pyinstaller --noconfirm --onefile --windowed --add-data "skyelectricFbKey.json;." --add-data "version.txt;." FbManager.py --distpath FbPgExe --workpath FbPgExe/build FbManager.py
 
       - name: updater 빌드
         run: pyinstaller --noconfirm --onefile FbPgExe/updater.py
