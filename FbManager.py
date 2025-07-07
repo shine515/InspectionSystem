@@ -7,6 +7,35 @@ from PyQt5.QtWidgets import (
 import firebase_admin
 from firebase_admin import credentials, firestore
 
+import requests
+from packaging import version
+
+import subprocess
+
+CURRENT_VERSION = "0.0.3"  # 현재 앱 버전
+
+def get_latest_release_info():
+    url = "https://api.github.com/repos/shine515/InspectionSystem/releases/latest"
+    try:
+        res = requests.get(url, timeout=5)
+        if res.status_code == 200:
+            data = res.json()
+            tag = data["tag_name"].lstrip("v")  # 'v1.2.3' → '1.2.3'
+            for asset in data["assets"]:
+                if asset["name"].endswith(".zip"):
+                    return tag, asset["browser_download_url"]
+        return None, None
+    except Exception as e:
+        print("[업데이트] 버전 조회 실패:", e)
+        return None, None
+
+def is_update_needed(current_version):
+    latest_version, download_url = get_latest_release_info()
+    if latest_version and version.parse(latest_version) > version.parse(current_version):
+        return True, download_url, latest_version
+    return False, None, None
+
+
 def resource_path(relative_path):
     try:
         base_path = sys._MEIPASS  # PyInstaller 실행 시 임시 폴더
@@ -275,6 +304,18 @@ class ManagerProgram(QWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+    update_needed, zip_url, latest = is_update_needed(CURRENT_VERSION)
+
+if update_needed:
+    reply = QMessageBox.question(
+        None,
+        "업데이트 확인",
+        f"새 버전 {latest} 이(가) 있습니다.\n업데이트 하시겠습니까?",
+        QMessageBox.Yes | QMessageBox.No
+    )
+    if reply == QMessageBox.Yes:
+        subprocess.Popen(["Updater.exe", zip_url])
+        sys.exit()
     window = ManagerProgram()
     window.show()
     sys.exit(app.exec_())
