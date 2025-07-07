@@ -5,13 +5,16 @@ on:
     branches:
       - main
 
+permissions:
+  contents: write
+  packages: write
+  issues: write
+
 jobs:
   build:
     runs-on: windows-latest
-
     steps:
-      - name: 소스코드 체크아웃
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v
 
       - name: 파이썬 설치
         uses: actions/setup-python@v4
