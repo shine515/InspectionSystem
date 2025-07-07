@@ -31,10 +31,14 @@ jobs:
       - name: 경로 확인
         run: dir
 
+      - name: 기존 spec 파일 삭제
+        shell: pwsh
+        run: Remove-Item -Force FbManager.spec -ErrorAction SilentlyContinue
+
       - name: EXE 빌드
         shell: pwsh
         run: |
-          pyinstaller --noconfirm --onefile --windowed --add-data "./skyelectricFbKey.json;." --distpath FbPgExe --workpath FbPgExe/build --specpath FbPgExe FbManager.py
+          pyinstaller --noconfirm --onefile --windowed --add-data "skyelectricFbKey.json;." --distpath FbPgExe --workpath FbPgExe/build FbManager.py
 
       - name: 키 파일 삭제
         shell: pwsh
