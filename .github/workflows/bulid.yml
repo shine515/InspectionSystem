@@ -34,15 +34,18 @@ jobs:
 
       - name: spec삭제
         shell: pwsh
-        run: Remove-Item -Force FbManager.spec -ErrorAction SilentlyContinue
-
-      - name: FbManagerEXE 빌드
-        shell: pwsh
         run: |
-          pyinstaller --noconfirm --onefile --windowed --add-data "skyelectricFbKey.json;." --add-data "version.txt;." FbManager.py --distpath FbPgExe --workpath FbPgExe/build FbManager.py
+          Remove-Item -Force FbManager.spec -ErrorAction SilentlyContinue
+          Remove-Item -Force updater.spec -ErrorAction SilentlyContinue
 
       - name: updater 빌드
         run: pyinstaller --noconfirm --onefile FbPgExe/updater.py
+        
+      - name: FbManager EXE 빌드
+        shell: pwsh
+        run: |
+          pyinstaller --noconfirm --onefile --windowed --add-data "skyelectricFbKey.json;." FbManager.py --distpath FbPgExe --workpath FbPgExe/build FbManager.py
+
 
       #- name: Firebase Key 삭제
       #  shell: pwsh
