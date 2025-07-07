@@ -23,19 +23,19 @@ jobs:
           python -m pip install --upgrade pip
           pip install pyinstaller PyQt5 firebase-admin
 
-      - name: Firebase 키 복원 #(PowerShell 사용)
+      - name: Firebase 키 복원 (PowerShell 사용)
         shell: pwsh
         run: |
           [System.IO.File]::WriteAllBytes("skyelectricFbKey.json", [Convert]::FromBase64String("${{ secrets.FB_KEY_BASE64 }}"))
 
-      - name: EXE 빌드 (FbPgExe 폴더)
+      - name: EXE 빌드 (PowerShell, 한 줄 처리)
+        shell: pwsh
         run: |
-          pyinstaller --noconfirm --onefile --windowed ^
-            --add-data "skyelectricFbKey.json;." ^
-            --distpath FbPgExe --workpath FbPgExe/build --specpath FbPgExe FbManager.py
+          pyinstaller --noconfirm --onefile --windowed --add-data "skyelectricFbKey.json;." --distpath FbPgExe --workpath FbPgExe/build --specpath FbPgExe FbManager.py
 
       - name: 키 파일 삭제
-        run: del skyelectricFbKey.json
+        shell: pwsh
+        run: Remove-Item skyelectricFbKey.json
 
       - name: FbPgExe 폴더 압축
         run: Compress-Archive -Path FbPgExe\* -DestinationPath FbPgExe.zip
