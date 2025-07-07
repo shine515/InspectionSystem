@@ -52,9 +52,7 @@ jobs:
       #  run: Remove-Item -Force skyelectricFbKey.json
 
       - name: FbPgExe압축
-        run: |
-          copy version.txt FbPgExe\ 
-          Compress-Archive -Path FbPgExe\* -DestinationPath FbPgExe.zip
+        run: Compress-Archive -Path FbPgExe\* -DestinationPath FbPgExe.zip
 
       - name: 자동태그
         uses: mathieudutour/github-tag-action@v6.1
