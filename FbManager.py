@@ -28,6 +28,14 @@ def get_latest_release_info():
     except Exception as e:
         print("[업데이트] 버전 조회 실패:", e)
         return None, None
+    
+
+def read_local_version():
+    try:
+        with open(os.path.join(os.path.dirname(__file__), "version.txt"), "r", encoding="utf-8") as f:
+            return f.read().strip()
+    except:
+        return "0.0.0"
 
 def is_update_needed(current_version):
     latest_version, download_url = get_latest_release_info()
