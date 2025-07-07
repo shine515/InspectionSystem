@@ -44,7 +44,7 @@ jobs:
       - name: EXE 빌드
         shell: pwsh
         run: |
-          pyinstaller --noconfirm --onefile --windowed --add-data "skyelectricFbKey.json;keys" --distpath FbPgExe --workpath FbPgExe/build FbManager.py
+          pyinstaller --noconfirm --onefile --windowed --add-data "keys/skyelectricFbKey.json" --distpath FbPgExe --workpath FbPgExe/build FbManager.py
 
       - name: Firebase Key 삭제
         shell: pwsh
