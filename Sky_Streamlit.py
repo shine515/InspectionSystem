@@ -110,7 +110,6 @@ def print_page():
         #new
         with st.sidebar:
             choice = option_menu(None, list(folders.keys()),
-                                icons=['house', 'kanban', 'bi bi-robot'],
                                 menu_icon="app-indicator", default_index=0,)  
         
         print_url(folders[choice])
