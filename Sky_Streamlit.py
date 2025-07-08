@@ -4,7 +4,6 @@ import firebase_admin
 from firebase_admin import credentials, firestore
 from collections import defaultdict
 from streamlit_option_menu import option_menu
-from bisect import insort
 
 # Firebase 연결
 # Firebase 초기화 및 연결 상태 확인
