@@ -67,13 +67,12 @@ jobs:
         id: commit_tag
         shell: bash
         run: |
-          TAG=$(git log -1 --pretty=%B | sed -n 's/.*\[release:v\([0-9.]*\)\].*/\1/p')
+          TAG=$(git log -1 --pretty=%B | sed -n 's/.*\[release:v\([0-9.]*\)\].*/\1/p' | tr -d '\n')
           if [ -z "$TAG" ]; then
-            echo "custom_tag=" >> $GITHUB_OUTPUT
+            echo "custom_tag=" >> "$GITHUB_OUTPUT"
           else
-            echo "custom_tag=v$TAG" >> $GITHUB_OUTPUT
+            echo "custom_tag=v$TAG" >> "$GITHUB_OUTPUT"
           fi
-
 
       - name: 태그 만들기
         uses: mathieudutour/github-tag-action@v6.1
