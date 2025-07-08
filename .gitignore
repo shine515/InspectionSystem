@@ -9,6 +9,7 @@ keys/
 *.db
 *.json
 version.txt
+test.py
 
 # C extensions
 *.so

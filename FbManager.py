@@ -11,6 +11,8 @@ import requests
 from packaging import version
 
 import subprocess
+#---------------------------------------------------#
+###------------------업데이트 체크------------------###
 
 def get_latest_release_info():
     url = "https://api.github.com/repos/shine515/InspectionSystem/releases/latest"
@@ -26,7 +28,6 @@ def get_latest_release_info():
     except Exception as e:
         print("[업데이트] 버전 조회 실패:", e)
         return None, None
-    
 
 def read_local_version():
     try:
@@ -49,7 +50,6 @@ def is_update_needed(current_version):
             
     return False, None, None
 
-
 def resource_path(relative_path):
     try:
         base_path = sys._MEIPASS  # PyInstaller 실행 시 임시 폴더
@@ -57,7 +57,9 @@ def resource_path(relative_path):
         base_path = os.path.abspath(".")
 
     return os.path.join(base_path, relative_path)
+#---------------------------------------------------#
 
+###------------------DB(FireBase연결)------------------###
 # Firebase 키 경로
 key_path = resource_path("skyelectricFbKey.json")
 
@@ -67,7 +69,7 @@ if not firebase_admin._apps:
     cred = credentials.Certificate(key_path)
     firebase_admin.initialize_app(cred)
 db = firestore.client()
-
+#-------------------------------------------------------#
 
 class AddOrEditWindow(QDialog):
     def __init__(self, parent=None, data=None):
@@ -87,6 +89,7 @@ class AddOrEditWindow(QDialog):
         self.txt_google = QLineEdit()
         self.txt_sheet = QLineEdit()
         self.txt_staff = QLineEdit()
+        self.txt_Floder = QLineEdit()
 
         layout.addWidget(QLabel("수용가번호 (데이터코드)"))
         layout.addWidget(self.txt_code)
@@ -102,6 +105,8 @@ class AddOrEditWindow(QDialog):
         layout.addWidget(self.txt_sheet)
         layout.addWidget(QLabel("담당직원"))
         layout.addWidget(self.txt_staff)
+        layout.addWidget(QLabel("정리폴더"))
+        layout.addWidget(self.txt_Floder)
 
         self.btn_save = QPushButton("저장")
         self.btn_save.clicked.connect(self.save_data)
@@ -111,14 +116,15 @@ class AddOrEditWindow(QDialog):
 
         if data:
             self.txt_code.setText(data.get("data_code", ""))
+            self.txt_code.setReadOnly(True)
             self.txt_name.setText(data.get("name", ""))
             self.txt_addr.setText(data.get("address", ""))
             self.txt_google.setText(data.get("form_url", ""))
             self.txt_sheet.setText(data.get("sheet_url", ""))
             self.txt_staff.setText(data.get("employee", ""))
             self.txt_type.setText(data.get("category", ""))
-            self.txt_name.setReadOnly(True)
-
+            self.txt_Floder.setText(data.get("Folder", ""))
+            
     def save_data(self):
         name = self.txt_name.text().strip()
         code = self.txt_code.text().strip()
@@ -133,10 +139,11 @@ class AddOrEditWindow(QDialog):
             "form_url": self.txt_google.text().strip(),
             "sheet_url": self.txt_sheet.text().strip(),
             "employee": self.txt_staff.text().strip(),
-            "category": self.txt_type.text().strip()
+            "category": self.txt_type.text().strip(),
+            "Folder": self.txt_Floder.text().strip()
         }
 
-        db.collection("sites").document(name).set(data)
+        db.collection("sites").document(code).set(data)
         QMessageBox.information(self, "성공", "저장되었습니다.")
         self.accept()
 
@@ -199,6 +206,7 @@ class ManagerProgram(QWidget):
         self.txt_sheet = QLineEdit(); self.txt_sheet.setReadOnly(True)
         self.txt_staff = QLineEdit(); self.txt_staff.setReadOnly(True)
         self.txt_type = QLineEdit(); self.txt_type.setReadOnly(True)
+        self.txt_Floder = QLineEdit(); self.txt_Floder.setReadOnly(True)
 
         grid.addWidget(QLabel("데이터코드"), 0, 0); grid.addWidget(self.txt_code, 0, 1)
         grid.addWidget(QLabel("수용가이름"), 1, 0); grid.addWidget(self.txt_name, 1, 1)
@@ -207,6 +215,7 @@ class ManagerProgram(QWidget):
         grid.addWidget(QLabel("응답시트링크"), 4, 0); grid.addWidget(self.txt_sheet, 4, 1)
         grid.addWidget(QLabel("담당직원"), 5, 0); grid.addWidget(self.txt_staff, 5, 1)
         grid.addWidget(QLabel("구분"), 6, 0); grid.addWidget(self.txt_type, 6, 1)
+        grid.addWidget(QLabel("정리폴더"), 7, 0); grid.addWidget(self.txt_Floder, 7, 1)
 
         detail_group.setLayout(grid)
 
@@ -287,6 +296,7 @@ class ManagerProgram(QWidget):
         self.txt_sheet.setText(site.get("sheet_url", ""))
         self.txt_staff.setText(site.get("employee", ""))
         self.txt_type.setText(site.get("category", ""))
+        self.txt_Floder.setText(site.get("Floder", ""))
 
     def open_add_window(self):
         dlg = AddOrEditWindow(parent=self)
@@ -314,6 +324,7 @@ class ManagerProgram(QWidget):
         self.txt_sheet.clear()
         self.txt_staff.clear()
         self.txt_type.clear()
+        self.txt_Floder.clear()
         self.load_site_list()
 
 if __name__ == "__main__":
