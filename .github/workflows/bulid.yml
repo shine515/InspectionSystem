@@ -65,6 +65,7 @@ jobs:
     
       - name: 커밋 메시지에서 태그 추출
         id: commit_tag
+        shell: bash
         run: |
           TAG=$(git log -1 --pretty=%B | grep -oP '\[release:v\K[0-9.]+')
           if [ -z "$TAG" ]; then
