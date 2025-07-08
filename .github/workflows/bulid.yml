@@ -18,6 +18,15 @@ jobs:
       - name: 소스코드 체크아웃
         uses: actions/checkout@v3
 
+      - name: Check if FbManager.py changed
+        id: changed
+        run: |
+          git fetch origin main
+          if git diff --name-only origin/main | grep -q 'FbManager.py'; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+
       - name: 파이썬 설치
         uses: actions/setup-python@v4
         with:
@@ -51,11 +60,25 @@ jobs:
       #  shell: pwsh
       #  run: Remove-Item -Force skyelectricFbKey.json
     
-      - name: 자동태그
+      - name: 커밋 메시지에서 태그 추출
+        id: commit_tag
+        run: |
+          TAG=$(git log -1 --pretty=%B | grep -oP '\[release:v\K[0-9.]+')
+          if [ -z "$TAG" ]; then
+            echo "custom_tag=" >> $GITHUB_OUTPUT
+          else
+            echo "custom_tag=v$TAG" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 태그 만들기
         uses: mathieudutour/github-tag-action@v6.1
         id: tagger
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        tag_prefix: "v"
+        release_branches: main
+        default_bump: patch   # patch / minor / major
+
           
       - name: 버전 쓰기
         run: |
