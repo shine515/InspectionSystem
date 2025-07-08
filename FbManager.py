@@ -79,7 +79,7 @@ class AddOrEditWindow(QDialog):
         self.setModal(True)
         self.initUI(data)
 
-    def initUI(self, data):
+    def initUI(self, data): #수용가 추가UI
         layout = QVBoxLayout()
         #수용가 정보
         self.txt_code = QLineEdit()
@@ -125,7 +125,7 @@ class AddOrEditWindow(QDialog):
             self.txt_type.setText(data.get("category", ""))
             self.txt_Floder.setText(data.get("Folder", ""))
             
-    def save_data(self):
+    def save_data(self): #서버에 업데이트
         name = self.txt_name.text().strip()
         code = self.txt_code.text().strip()
         if not name or not code:
