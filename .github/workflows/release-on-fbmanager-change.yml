@@ -1,0 +1,21 @@
+# .github/workflows/release-on-fbmanager-change.yml
+
+name: Release if FbManager.py Changed
+
+on:
+  push:
+    paths:
+      - 'FbManager.py'   # ← 이 파일에 변경이 있을 때만 트리거
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Do Release
+        run: |
+          echo "📦 FbManager.py가 수정되었으므로 릴리즈를 시작합니다."
+          # 여기에 빌드/배포/태그 명령어 작성
