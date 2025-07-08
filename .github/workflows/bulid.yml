@@ -52,6 +52,7 @@ jobs:
         run: pyinstaller --noconfirm --onefile --windowed --distpath FbPgExe Updater.py
 
       - name: EXE 빌드
+        if: steps.changed.outputs.changed == 'true'
         shell: pwsh
         run: |
           pyinstaller --noconfirm --onefile --windowed --add-data "skyelectricFbKey.json;." --distpath FbPgExe --workpath FbPgExe/build FbManager.py
