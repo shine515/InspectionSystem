@@ -27,6 +27,7 @@ jobs:
             echo "changed=true" >> "$GITHUB_OUTPUT"
           else
             echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: 파이썬 설치
         uses: actions/setup-python@v4
